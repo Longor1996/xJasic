@@ -27,6 +27,7 @@ public class MethodCall implements Statement, Expression
 		
 		if(func == null)
 		{
+			System.out.println("Failed to call function: " + this.functionName);
 			return;
 		}
 		
@@ -54,7 +55,7 @@ public class MethodCall implements Statement, Expression
 	public boolean execute()
 	{
 		this.evaluate();
-		return true;
+		return this.function != null;
 	}
 	
 }

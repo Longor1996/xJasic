@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import de.longor1996.jasic.functions.TimeFunction;
 import de.longor1996.jasic.functions.math.ACosFunction;
 import de.longor1996.jasic.functions.math.ASinFunction;
 import de.longor1996.jasic.functions.math.ATanFunction;
@@ -249,8 +250,10 @@ public class Jasic
 		this.variables.put(name, value);
 	}
     
-    public void addBasicMathFunctions()
+    public void addBasicFunctions()
     {
+    	this.addFunction(new TimeFunction());
+    	
     	this.addFunction(new AbsFunction());
     	this.addFunction(new ACosFunction());
     	this.addFunction(new ASinFunction());
