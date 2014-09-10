@@ -18,22 +18,10 @@ import de.longor1996.jasic.statements.IfThenStatement;
 import de.longor1996.jasic.statements.InputStatement;
 import de.longor1996.jasic.statements.LetArrayStatement;
 import de.longor1996.jasic.statements.LetStatement;
+import de.longor1996.jasic.statements.PrintStatement;
 import de.longor1996.jasic.statements.StackPeekStatement;
 import de.longor1996.jasic.statements.StackPopStatement;
 import de.longor1996.jasic.statements.StackPushStatement;
-import de.longor1996.jasic.statements.math.ACos;
-import de.longor1996.jasic.statements.math.ASin;
-import de.longor1996.jasic.statements.math.ATan;
-import de.longor1996.jasic.statements.math.Abs;
-import de.longor1996.jasic.statements.math.Cbrt;
-import de.longor1996.jasic.statements.math.Ceil;
-import de.longor1996.jasic.statements.math.Cos;
-import de.longor1996.jasic.statements.math.Floor;
-import de.longor1996.jasic.statements.math.Log;
-import de.longor1996.jasic.statements.math.Pow;
-import de.longor1996.jasic.statements.math.Sin;
-import de.longor1996.jasic.statements.math.Sqrt;
-import de.longor1996.jasic.statements.math.Tan;
 
 /**
  * This defines the Jasic parser. The parser takes in a sequence of tokens
@@ -51,7 +39,9 @@ public class Parser
 	 * 
 	 */
 	private final Jasic jasic;
-	public Parser(Jasic jasic, List<Token> tokens, Map<String, IStatementParser> statements) {
+	
+	public Parser(Jasic jasic, List<Token> tokens, Map<String, IStatementParser> statements)
+	{
         this.jasic = jasic;
 		this.tokens = tokens;
         this.position = 0;
@@ -67,7 +57,9 @@ public class Parser
      *                  parser will fill this in as it scans the code.
      * @return          The list of parsed statements.
      */
-    public List<Statement> parse(Map<String, Integer> labels) {
+    public List<Statement> parse(Map<String, Integer> labels)
+    {
+    	System.out.println("[xJasic.Parser] Parsing... ");
         List<Statement> statements = new ArrayList<Statement>();
         int lineNumber = 1;
         
@@ -80,8 +72,14 @@ public class Parser
             // Parse Instruction, check if method returns null, and stop interpreting if needed
             if(this.parseNextInstruction(statements, lineNumber) == null)
             {
-            	System.out.println("[Interpreter] (Possibly) End-Of-File or unexpected Token, at token " + this.position + ", at "+this.last(1)+".");
-            	break; // Unexpected token (likely EOF), so end.
+            	if(this.last(1).type == TokenType.LINEBREAK)
+            	{
+                	System.out.println("[xJasic.Parser] Done!");
+                	break;
+            	}
+            	
+            	System.out.println("[xJasic.Parser] Unexpected Token, at token " + this.position + ", at "+this.last(1)+".");
+            	break; // Unexpected token, so end.
             }
         }
         
@@ -140,48 +138,11 @@ public class Parser
 			statements.add(out = new DeleteStatement(this.jasic, this.consume(TokenType.WORD).text));
 		} else if (this.matchLCT("goto")) {
 			statements.add(out = new GotoStatement(this.jasic, this.consume(TokenType.WORD).text));
-		} else if (this.matchLCT("if"))
-		{
+		} else if (this.matchLCT("if")) {
             Expression condition = this.expression();
             this.consumeLCT("then");
             statements.add(out = new IfThenStatement(this.jasic, condition, this.parseNextInstruction(new ThrowList<Statement>(), lineNumber)));
-        }
-        
-		else if (this.matchLCT("sin")) {
-			statements.add(out = new Sin(this.jasic, this.consume(TokenType.WORD, TokenType.COMMA).text, this.expression()));
-		} else if (this.matchLCT("cos")) {
-			statements.add(out = new Cos(this.jasic, this.consume(TokenType.WORD, TokenType.COMMA).text, this.expression()));
-		} else if (this.matchLCT("tan")) {
-			statements.add(out = new Tan(this.jasic, this.consume(TokenType.WORD, TokenType.COMMA).text, this.expression()));
-		} else if (this.matchLCT("asin")) {
-			statements.add(out = new ASin(this.jasic, this.consume(TokenType.WORD, TokenType.COMMA).text, this.expression()));
-		} else if (this.matchLCT("acos")) {
-			statements.add(out = new ACos(this.jasic, this.consume(TokenType.WORD, TokenType.COMMA).text, this.expression()));
-		} else if (this.matchLCT("atan")) {
-			statements.add(out = new ATan(this.jasic, this.consume(TokenType.WORD, TokenType.COMMA).text, this.expression()));
-		} else if (this.matchLCT("sqrt")) {
-			statements.add(out = new Sqrt(this.jasic, this.consume(TokenType.WORD, TokenType.COMMA).text, this.expression()));
-		} else if (this.matchLCT("cbrt")) {
-			statements.add(out = new Cbrt(this.jasic, this.consume(TokenType.WORD, TokenType.COMMA).text, this.expression()));
-		} else if (this.matchLCT("floor")) {
-			statements.add(out = new Floor(this.jasic, this.consume(TokenType.WORD, TokenType.COMMA).text, this.expression()));
-		} else if (this.matchLCT("ceil")) {
-			statements.add(out = new Ceil(this.jasic, this.consume(TokenType.WORD, TokenType.COMMA).text, this.expression()));
-		} else if (this.matchLCT("abs")) {
-			statements.add(out = new Abs(this.jasic, this.consume(TokenType.WORD, TokenType.COMMA).text, this.expression()));
-		} else if (this.matchLCT("log")) {
-			statements.add(out = new Log(this.jasic, this.consume(TokenType.WORD, TokenType.COMMA).text, this.expression()));
-		} else if (this.matchLCT("pow"))
-		{
-			Token vn = this.consume(TokenType.WORD);
-			this.consume(TokenType.COMMA);
-			Expression l = this.expression();
-			this.consume(TokenType.COMMA);
-			Expression r = this.expression();
-			statements.add(out = new Pow(this.jasic, vn.text, l, r));
-		}
-		else if(this.match(TokenType.WORD, TokenType.LEFT_PAREN))
-		{
+        } else if(this.match(TokenType.WORD, TokenType.LEFT_PAREN)) {
     		String name = this.last(2).text;
     		ArrayList<Expression> parameters = new ArrayList<Expression>();
     		
@@ -197,17 +158,13 @@ public class Parser
     		
     		this.consume(TokenType.RIGHT_PAREN);
 			statements.add(out = new MethodCall(this.jasic, name, parameters));
-		}
-		else if (this.matchLCT("rem"))
-		{
+		} else if (this.matchLCT("rem")) {
 			;while(this.get(0).type != TokenType.LINEBREAK)
 			{
 				System.out.println("> " + this.get(0));
 				this.position++;
 			}
-		}
-		else
-		{
+		} else {
 			IStatementParser subParser = this.statementParsers.get(this.getStr(0));
 			
 			if(subParser != null)
@@ -217,8 +174,7 @@ public class Parser
 			}
 			else
 			{
-				// Unexpected token (likely EOF), so end.
-            	// System.out.println("[Interpreter] End-Of-File or unexpected Token, at line " + lineNumber + ", at "+this.last(1)+".");
+				// We couldn't parse whatever it was, so stop parsing.
             	;return null;
 			}
     	}
@@ -287,9 +243,8 @@ public class Parser
     public Expression atomic() {
     	Token c = this.get(0);
     	
-    	// match(WORD,LBRACKET)
-    	// new::VarArrayAccess(expression())
-    	// consume(RBRACKET)
+    	
+    	// ----- ARRAY ACCESS
     	if (this.match(TokenType.WORD, TokenType.LEFT_BRACKET))
     	{
     		String name = this.last(2).text;
@@ -297,6 +252,8 @@ public class Parser
     		this.consume(TokenType.RIGHT_BRACKET);
     		return new ArrayVariableExpression(this.jasic, name, indexExp);
     	}
+    	
+    	// ----- FUNCTION CALL
     	else if (this.match(TokenType.WORD, TokenType.LEFT_PAREN))
     	{
     		String name = this.last(2).text;
@@ -315,14 +272,24 @@ public class Parser
     		this.consume(TokenType.RIGHT_PAREN);
     		return new MethodCall(this.jasic, name, parameters);
     	}
+    	
+    	// ----- VARIABLE ACCESS
     	else if (this.match(TokenType.WORD)) {
-			// A word is a reference to a variable.
             return new VariableExpression(this.jasic, this.last(1).text);
-		} else if (this.match(TokenType.NUMBER)) {
+		}
+    	
+        // ----- STATIC NUMBER
+    	else if (this.match(TokenType.NUMBER)) {
 			return new NumberValue(Double.parseDouble(this.last(1).text));
-		} else if (this.match(TokenType.STRING)) {
+		}
+    	
+        // ----- STATIC STRING
+    	else if (this.match(TokenType.STRING)) {
 			return new StringValue(this.last(1).text);
-		} else if (this.match(TokenType.LEFT_PAREN)) {
+		}
+    	
+        // ----- INNER EXPRESSION
+    	else if (this.match(TokenType.LEFT_PAREN)) {
             // The contents of a parenthesized expression can be any
             // expression. This lets us "restart" the precedence cascade
             // so that you can have a lower precedence expression inside
@@ -331,6 +298,7 @@ public class Parser
             this.consume(TokenType.RIGHT_PAREN);
             return expression;
         }
+    	
         throw new RuntimeException("Couldn't parse :(  -> " + c);
     }
 

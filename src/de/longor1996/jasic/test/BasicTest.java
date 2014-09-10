@@ -12,7 +12,7 @@ public class BasicTest {
 		String code = "";
 		
 		code += "PRINT \"Hello, World!\"\n";
-		code += "PRINT sqrt(64)\n";
+		code += "PRINT \"The Squareroot of 17 is: \" + sqrt(17)\n";
 		code += "PRINT pow(2, 32) + 0.5\n";
 		code += "LOL(\"HI!\")\n";
 		code += '\n';
