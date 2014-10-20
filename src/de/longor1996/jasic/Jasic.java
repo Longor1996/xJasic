@@ -13,21 +13,7 @@ import java.util.Map;
 import java.util.Stack;
 
 import de.longor1996.jasic.functions.TimeFunction;
-import de.longor1996.jasic.functions.math.ACosFunction;
-import de.longor1996.jasic.functions.math.ASinFunction;
-import de.longor1996.jasic.functions.math.ATanFunction;
-import de.longor1996.jasic.functions.math.AbsFunction;
-import de.longor1996.jasic.functions.math.CbrtFunction;
-import de.longor1996.jasic.functions.math.CeilFunction;
-import de.longor1996.jasic.functions.math.CosFunction;
-import de.longor1996.jasic.functions.math.FloorFunction;
-import de.longor1996.jasic.functions.math.LogFunction;
-import de.longor1996.jasic.functions.math.LogTenFunction;
-import de.longor1996.jasic.functions.math.PowFunction;
-import de.longor1996.jasic.functions.math.SinFunction;
-import de.longor1996.jasic.functions.math.SqrtFunction;
-import de.longor1996.jasic.functions.math.TanFunction;
-
+import de.longor1996.jasic.functions.math.*;
 
 /**
  * <pre>
