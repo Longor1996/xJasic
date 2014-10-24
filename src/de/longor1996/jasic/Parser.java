@@ -5,23 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import de.longor1996.jasic.Statement.EmptyStatement;
-import de.longor1996.jasic.expressions.ArrayVariableExpression;
-import de.longor1996.jasic.expressions.InvokeNativeStatement;
-import de.longor1996.jasic.expressions.OperatorExpression;
-import de.longor1996.jasic.expressions.VariableExpression;
-import de.longor1996.jasic.statements.ArrayAssignStatement;
-import de.longor1996.jasic.statements.AssignStatement;
-import de.longor1996.jasic.statements.DeleteStatement;
-import de.longor1996.jasic.statements.EndStatement;
-import de.longor1996.jasic.statements.GotoStatement;
-import de.longor1996.jasic.statements.IfThenStatement;
-import de.longor1996.jasic.statements.InputStatement;
-import de.longor1996.jasic.statements.LetArrayStatement;
-import de.longor1996.jasic.statements.LetStatement;
-import de.longor1996.jasic.statements.PrintStatement;
-import de.longor1996.jasic.statements.StackPeekStatement;
-import de.longor1996.jasic.statements.StackPopStatement;
-import de.longor1996.jasic.statements.StackPushStatement;
+import de.longor1996.jasic.expressions.*;
+import de.longor1996.jasic.statements.*;
 
 /**
  * This defines the Jasic parser. The parser takes in a sequence of tokens
