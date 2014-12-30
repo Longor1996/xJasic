@@ -269,7 +269,7 @@ public class Jasic
      * @param source A string containing the source code of a .jas script to
      *               interpret.
      */
-    public void interpret(String source, Object nativeObject)
+    public Value interpret(String source, Object nativeObject)
     {
         // Tokenize.
         List<Token> tokens = Tokenizer.tokenize(source.concat("\n\n"));
@@ -304,9 +304,9 @@ public class Jasic
             {
 				break;
 			}
-            
         }
         
+        return variables.getOrDefault("return", null);
     }
     
 	public void setVariable(String var, Value calc) {
