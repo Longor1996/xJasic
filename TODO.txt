@@ -1,0 +1,16 @@
+Refactor the whole thing so there is another step between parsing and executing.
+
+Instead of:
+	tokenize : List<Token>
+	parse : AbstractSyntaxTree
+	execute : Value
+
+We will have:
+	tokenize : List<Token>
+	parse : AbstractSyntaxTree
+	compile : ???
+	execute : Value
+
+Refactor Value class into a simpler system based on allocating ByteBuffer's.
+Make conversion to/from xJasic types simpler.
+Implement a system for 'tables'.
